@@ -1,0 +1,19 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "<TYPES><THIRD_PARTY_MODULES>",
+    "<TYPES>",
+    "",
+    "^@/(app|pages|widgets|features|entities|shared)(/.*)?$",
+    "<TYPES>^@/(app|pages|widgets|features|entities|shared)(/.*)?$",
+    "",
+    "^[./](?!.*\\.css$).*",
+    "<TYPES>^[./](?!.*\\.css$).*",
+    "",
+    ".css$"
+  ],
+  "importOrderCaseSensitive": true
+}
