@@ -8,7 +8,11 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['dist', 'src/shared/api/generated/**/*']),
+  globalIgnores([
+    'dist',
+    'public/mockServiceWorker.js',
+    'src/shared/api/generated/**/*',
+  ]),
 
   {
     files: ['**/*.{ts,tsx}'],
