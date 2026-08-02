@@ -1,4 +1,4 @@
-import type { AuctionDetailVisibility } from '../../model/auction-detail-visibility';
+import type { AuctionDetailVisibility } from '@/entities/auction';
 
 interface AuctionVisibilityRestrictionsProps {
   visibility: AuctionDetailVisibility;

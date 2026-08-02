@@ -2,6 +2,7 @@ import { Gavel } from 'lucide-react';
 
 import {
   AuctionTradingStatusBadge,
+  getAuctionDetailVisibility,
   getAuctionStatusLabel,
 } from '@/entities/auction';
 import { formatDateTime } from '@/shared/lib/format';
@@ -11,7 +12,6 @@ import {
   formatBoolean,
   getBidMeasurementLabel,
 } from '../../model/auction-detail-labels';
-import { getAuctionDetailVisibility } from '../../model/auction-detail-visibility';
 import { AuctionDetailField } from '../AuctionDetailField';
 import { AuctionDetailSection } from '../AuctionDetailSection';
 import { AuctionOwnBetSection } from './AuctionOwnBetSection';

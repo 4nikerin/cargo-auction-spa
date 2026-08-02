@@ -1,4 +1,4 @@
-import type { AuctionDetail } from '@/entities/auction';
+import type { AuctionDetail } from '../api/auction-api';
 
 type TradingVisibility = Pick<
   AuctionDetail['trading'],
@@ -22,10 +22,7 @@ export interface AuctionDetailVisibility {
   arePointDetailsHidden: boolean;
 }
 
-/**
- * OpenAPI передаёт ограничения отображения вместе с аукционом. Собираем их
- * здесь, чтобы UI-секции не трактовали флаги независимо друг от друга.
- */
+/** Собирает ограничения отображения detail DTO в одном месте. */
 export const getAuctionDetailVisibility = (
   detail: AuctionDetailVisibilitySource,
 ): AuctionDetailVisibility => {

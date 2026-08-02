@@ -1,10 +1,10 @@
 import { Package } from 'lucide-react';
 
+import { getAuctionDetailVisibility } from '@/entities/auction';
 import { formatNumber, formatPrice } from '@/shared/lib/format';
 import type { AuctionDetail } from '@/entities/auction';
 
 import { formatBoolean } from '../../model/auction-detail-labels';
-import { getAuctionDetailVisibility } from '../../model/auction-detail-visibility';
 import { AuctionDetailField } from '../AuctionDetailField';
 import { AuctionDetailSection } from '../AuctionDetailSection';
 import { AuctionVehicleRequirements } from './AuctionVehicleRequirements';

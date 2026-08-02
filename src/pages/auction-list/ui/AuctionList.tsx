@@ -1,7 +1,10 @@
 import { Link } from '@tanstack/react-router';
 
-import { AuctionCard } from '@/entities/auction';
+import { AuctionCard, hasAuctionOwnBet } from '@/entities/auction';
+import { PlaceAuctionBetListButton } from '@/features/place-auction-bet';
+import { ViewAuctionBetsButton } from '@/features/view-auction-bets';
 import { SearchPagination } from '@/shared/router/search-pagination';
+import { Button } from '@/shared/ui/button';
 import type { AuctionListItem } from '@/entities/auction';
 
 import type { AuctionListPagination } from '../model/auction-list-search';
@@ -25,19 +28,49 @@ export const AuctionList = ({
           // OpenAPI не делает UUID обязательным, поэтому сохраняем fallback для неполных данных.
           const auctionKey = auctionUuid ?? auction.main?.id ?? index;
 
-          const card = <AuctionCard auction={auction} />;
+          const hasOwnBet = hasAuctionOwnBet(auction.trading);
+          const canPlaceBet = auction.trading?.can_set_bet === true;
 
-          return auctionUuid ? (
-            <Link
-              key={auctionKey}
-              className="block rounded-xl text-foreground no-underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-              to="/auctions/$auctionUuid"
-              params={{ auctionUuid }}
-            >
-              {card}
-            </Link>
+          const action = !auctionUuid ? (
+            <Button size="sm" disabled>
+              Ставки недоступны
+            </Button>
+          ) : hasOwnBet ? (
+            canPlaceBet ? (
+              <PlaceAuctionBetListButton
+                auctionUuid={auctionUuid}
+                label="Изменить ставку"
+              />
+            ) : (
+              <ViewAuctionBetsButton auctionUuid={auctionUuid} />
+            )
+          ) : canPlaceBet ? (
+            <PlaceAuctionBetListButton
+              auctionUuid={auctionUuid}
+              label="Сделать ставку"
+            />
           ) : (
-            <div key={auctionKey}>{card}</div>
+            <Button size="sm" disabled>
+              Ставки недоступны
+            </Button>
+          );
+
+          return (
+            <AuctionCard
+              key={auctionKey}
+              auction={auction}
+              action={action}
+              detailsLink={
+                auctionUuid ? (
+                  <Link
+                    className="absolute inset-0 z-10 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                    to="/auctions/$auctionUuid"
+                    params={{ auctionUuid }}
+                    aria-label={`Открыть аукцион ${auction.main?.cargo_num ?? auctionUuid}`}
+                  />
+                ) : null
+              }
+            />
           );
         })}
       </div>

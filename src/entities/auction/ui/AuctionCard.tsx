@@ -5,6 +5,7 @@ import {
   Package,
   Scale,
 } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 import { cn } from '@/shared/lib/cn';
 import { formatDateTime, formatNumber, formatPrice } from '@/shared/lib/format';
@@ -18,6 +19,8 @@ import {
   CardTitle,
 } from '@/shared/ui/card';
 
+import { hasAuctionOwnBet } from '../model/auction-own-bet';
+import { getAuctionStatusLabel } from '../model/auction-status-labels';
 import { getAuctionTypeLabel } from '../model/auction-type-labels';
 import { AuctionCardInfoItem } from './AuctionCardInfoItem';
 import { AuctionCardRoutePoint } from './AuctionCardRoutePoint';
@@ -25,26 +28,36 @@ import { AuctionTradingStatusBadge } from './AuctionTradingStatusBadge';
 import type { AuctionListItem } from '../api/auction-api';
 
 interface AuctionCardProps {
+  action?: ReactNode;
   auction: AuctionListItem;
+  detailsLink?: ReactNode;
 }
 
 /** Краткое представление аукциона для списков. */
-export const AuctionCard = ({ auction }: AuctionCardProps) => {
+export const AuctionCard = ({
+  action,
+  auction,
+  detailsLink,
+}: AuctionCardProps) => {
   const { cargo, main, organizer, route, trading } = auction;
   const isLeading = trading?.status_mobile === 'Leading';
 
   return (
     <Card
       className={cn(
-        'overflow-hidden transition-shadow hover:shadow-md',
+        'relative overflow-hidden transition-shadow hover:shadow-md',
         isLeading &&
           'border-l-4 border-l-emerald-500 bg-linear-to-r from-emerald-50/55 via-card to-card dark:from-emerald-950/25',
       )}
     >
+      {detailsLink}
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
           <CardTitle>{main?.cargo_num ?? 'Аукцион без номера'}</CardTitle>
           <Badge variant="outline">{getAuctionTypeLabel(main?.auc_type)}</Badge>
+          <Badge variant="secondary">
+            {getAuctionStatusLabel(trading?.status)}
+          </Badge>
           <AuctionTradingStatusBadge status={trading?.status_mobile} />
         </div>
         <CardDescription className="flex items-center gap-1.5">
@@ -103,11 +116,12 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
         </div>
       </CardContent>
 
-      <CardFooter className="flex-wrap justify-between gap-2 text-xs text-muted-foreground">
-        <span>Кузов: {cargo?.body_type ?? 'не указан'}</span>
-        <span className="ml-auto text-right">
-          {trading?.can_set_bet ? 'Можно сделать ставку' : 'Ставки недоступны'}
-        </span>
+      <CardFooter className="flex-wrap justify-between gap-3 text-xs text-muted-foreground">
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
+          <span>Кузов: {cargo?.body_type ?? 'не указан'}</span>
+          <span>Моя ставка: {hasAuctionOwnBet(trading) ? 'есть' : 'нет'}</span>
+        </div>
+        {action ? <div className="relative z-20 ml-auto">{action}</div> : null}
       </CardFooter>
     </Card>
   );

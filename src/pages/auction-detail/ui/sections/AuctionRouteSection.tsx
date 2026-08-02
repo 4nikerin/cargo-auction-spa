@@ -1,8 +1,8 @@
 import { Route } from 'lucide-react';
 
+import { getAuctionDetailVisibility } from '@/entities/auction';
 import type { AuctionDetail } from '@/entities/auction';
 
-import { getAuctionDetailVisibility } from '../../model/auction-detail-visibility';
 import { AuctionDetailSection } from '../AuctionDetailSection';
 import { AuctionRoutePoint } from './AuctionRoutePoint';
 

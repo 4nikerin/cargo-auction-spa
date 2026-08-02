@@ -3,12 +3,12 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import {
   auctionBetsQueryOptions,
   auctionDetailQueryOptions,
+  getAuctionDetailVisibility,
 } from '@/entities/auction';
 import { getRussianPluralForm } from '@/shared/lib/plural';
 import { Switch } from '@/shared/ui/switch';
 
 import { getAuctionParticipantsCount } from '../model/auction-bet-display';
-import { getAuctionDetailVisibility } from '../model/auction-detail-visibility';
 import { AuctionBetsEmptyState } from './bets/AuctionBetsEmptyState';
 import { AuctionBetsError } from './bets/AuctionBetsError';
 import { AuctionBetsHiddenState } from './bets/AuctionBetsHiddenState';

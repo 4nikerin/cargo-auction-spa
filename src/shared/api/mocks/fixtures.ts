@@ -260,12 +260,12 @@ export const auctionListResponse = {
       },
       trading: {
         status: 'Auction',
-        status_mobile: 'NotParticipating',
+        status_mobile: 'Losing',
         start_time: '2026-08-01T09:00:00+07:00',
         stop_time: '2026-08-04T17:00:00+07:00',
-        can_set_bet: true,
+        can_set_bet: false,
         is_available: true,
-        is_bidder: false,
+        is_bidder: true,
         price: {
           current: 132_000,
           current_no_vat: 110_000,
@@ -657,9 +657,10 @@ export const auctionDetails: Record<string, AuctionShowResponse> = {
     },
     trading: {
       status: 'Auction',
-      status_mobile: 'NotParticipating',
-      can_set_bet: true,
-      is_bidder: false,
+      status_mobile: 'Losing',
+      can_set_bet: false,
+      is_bidder: true,
+      hide_bets_history: true,
       price: {
         start: 150_000,
         current: 132_000,
@@ -669,13 +670,13 @@ export const auctionDetails: Record<string, AuctionShowResponse> = {
         max: 150_000,
         step: 3_000,
       },
-      your: { bet: false, last_bet_with_vat: null },
+      your: { bet: true, last_bet_with_vat: 135_000 },
     },
     payment: { form: 'Безналичная с НДС', currency_code: '643' },
     assembly: {},
     routes: [],
     admitted_organizations: [],
-    hide_bets_history: false,
+    hide_bets_history: true,
   },
   [buildingAuctionUuid]: {
     main: {

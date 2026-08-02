@@ -10,6 +10,9 @@ export {
   getAuctionTypeLabel,
 } from './model/auction-type-labels';
 export { getAuctionStatusLabel } from './model/auction-status-labels';
+export { getAuctionDetailVisibility } from './model/auction-detail-visibility';
+export type { AuctionDetailVisibility } from './model/auction-detail-visibility';
+export { hasAuctionOwnBet } from './model/auction-own-bet';
 export {
   auctionTradingStatusOptions,
   getTradingStatusLabel,
