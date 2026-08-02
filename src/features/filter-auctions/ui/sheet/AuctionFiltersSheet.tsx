@@ -1,6 +1,7 @@
 import { SlidersHorizontal, X } from 'lucide-react';
 
 import { Button } from '@/shared/ui/button';
+import { ScrollArea } from '@/shared/ui/scroll-area';
 import {
   Sheet,
   SheetClose,
@@ -84,12 +85,15 @@ export const AuctionFiltersSheet = ({
             applyFilters();
           }}
         >
-          <div className="grid flex-1 gap-7 overflow-y-auto px-5 py-6 sm:px-6">
+          <ScrollArea
+            className="min-h-0 flex-1"
+            contentClassName="grid gap-7 px-5 py-6 pr-7 sm:px-6 sm:pr-8"
+          >
             <BasicFiltersSection draft={draft} setField={setField} />
             <RouteFiltersSection draft={draft} setField={setField} />
             <CargoPriceFiltersSection draft={draft} setField={setField} />
             <DateFiltersSection draft={draft} setField={setField} />
-          </div>
+          </ScrollArea>
 
           <footer className="grid shrink-0 grid-cols-2 gap-3 border-t bg-background p-4 sm:px-6">
             <Button type="button" variant="outline" onClick={resetFilters}>

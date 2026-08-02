@@ -3,6 +3,7 @@ import type { ReactElement } from 'react';
 
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
+import { ScrollArea } from '@/shared/ui/scroll-area';
 
 interface PaginationProps {
   currentPage: number;
@@ -62,82 +63,87 @@ const Pagination = ({
   const items = getPaginationItems(currentPage, totalPages);
 
   return (
-    <nav
+    <ScrollArea
       className={cn(
-        'mx-auto flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-full border bg-background p-1.5 sm:gap-2 sm:p-2',
+        'mx-auto w-fit max-w-full rounded-full border bg-background',
         className,
       )}
-      aria-label="Пагинация"
+      orientation="horizontal"
     >
-      {currentPage > 1 ? (
-        <Button
-          nativeButton={false}
-          render={renderPageLink(currentPage - 1)}
-          className="size-9 rounded-full text-muted-foreground sm:size-11"
-          variant="ghost"
-          size="icon-lg"
-          aria-label="Предыдущая страница"
-        >
-          <ChevronLeft aria-hidden="true" />
-        </Button>
-      ) : null}
+      <nav
+        className="flex w-max items-center gap-1 p-1.5 pb-3 sm:gap-2 sm:p-2 sm:pb-3"
+        aria-label="Пагинация"
+      >
+        {currentPage > 1 ? (
+          <Button
+            nativeButton={false}
+            render={renderPageLink(currentPage - 1)}
+            className="size-9 rounded-full text-muted-foreground sm:size-11"
+            variant="ghost"
+            size="icon-lg"
+            aria-label="Предыдущая страница"
+          >
+            <ChevronLeft aria-hidden="true" />
+          </Button>
+        ) : null}
 
-      <div className="flex items-center gap-1 sm:gap-2">
-        {items.map((item) => {
-          if (typeof item !== 'number') {
-            return (
-              <span
-                key={item}
-                className="flex size-9 shrink-0 items-center justify-center text-lg text-muted-foreground sm:size-11"
-                aria-hidden="true"
-              >
-                …
-              </span>
-            );
-          }
+        <div className="flex items-center gap-1 sm:gap-2">
+          {items.map((item) => {
+            if (typeof item !== 'number') {
+              return (
+                <span
+                  key={item}
+                  className="flex size-9 shrink-0 items-center justify-center text-lg text-muted-foreground sm:size-11"
+                  aria-hidden="true"
+                >
+                  …
+                </span>
+              );
+            }
 
-          if (item === currentPage) {
+            if (item === currentPage) {
+              return (
+                <span
+                  key={item}
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-base font-medium text-foreground sm:size-11 sm:text-lg"
+                  aria-current="page"
+                  aria-label={`Страница ${item}`}
+                >
+                  {item}
+                </span>
+              );
+            }
+
             return (
-              <span
+              <Button
                 key={item}
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-base font-medium text-foreground sm:size-11 sm:text-lg"
-                aria-current="page"
-                aria-label={`Страница ${item}`}
+                nativeButton={false}
+                render={renderPageLink(item)}
+                className="size-9 rounded-full text-base font-normal text-muted-foreground hover:text-foreground sm:size-11 sm:text-lg"
+                variant="ghost"
+                size="icon-lg"
+                aria-label={`Перейти на страницу ${item}`}
               >
                 {item}
-              </span>
+              </Button>
             );
-          }
+          })}
+        </div>
 
-          return (
-            <Button
-              key={item}
-              nativeButton={false}
-              render={renderPageLink(item)}
-              className="size-9 rounded-full text-base font-normal text-muted-foreground hover:text-foreground sm:size-11 sm:text-lg"
-              variant="ghost"
-              size="icon-lg"
-              aria-label={`Перейти на страницу ${item}`}
-            >
-              {item}
-            </Button>
-          );
-        })}
-      </div>
-
-      {currentPage < totalPages ? (
-        <Button
-          nativeButton={false}
-          render={renderPageLink(currentPage + 1)}
-          className="size-9 rounded-full text-muted-foreground sm:size-11"
-          variant="ghost"
-          size="icon-lg"
-          aria-label="Следующая страница"
-        >
-          <ChevronRight aria-hidden="true" />
-        </Button>
-      ) : null}
-    </nav>
+        {currentPage < totalPages ? (
+          <Button
+            nativeButton={false}
+            render={renderPageLink(currentPage + 1)}
+            className="size-9 rounded-full text-muted-foreground sm:size-11"
+            variant="ghost"
+            size="icon-lg"
+            aria-label="Следующая страница"
+          >
+            <ChevronRight aria-hidden="true" />
+          </Button>
+        ) : null}
+      </nav>
+    </ScrollArea>
   );
 };
 

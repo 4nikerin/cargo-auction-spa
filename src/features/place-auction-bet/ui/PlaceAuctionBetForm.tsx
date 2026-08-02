@@ -8,6 +8,7 @@ import { applyApiFormErrors } from '@/shared/lib/apply-api-form-errors';
 import { formatPrice } from '@/shared/lib/format';
 import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/alert';
 import { Button } from '@/shared/ui/button';
+import { ScrollArea } from '@/shared/ui/scroll-area';
 import type { AuctionDetail } from '@/entities/auction';
 
 import {
@@ -70,7 +71,10 @@ export const PlaceAuctionBetForm = ({
 
   return (
     <form className="flex min-h-0 flex-1 flex-col" onSubmit={handleFormSubmit}>
-      <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-6">
+      <ScrollArea
+        className="min-h-0 flex-1"
+        contentClassName="px-5 py-6 pr-7 sm:px-6 sm:pr-8"
+      >
         <p className="text-sm text-muted-foreground">
           Укажите новую цену. Сервер проверит направление торгов, допустимый
           диапазон и шаг ставки.
@@ -118,7 +122,7 @@ export const PlaceAuctionBetForm = ({
           inputRef={inputRef}
           step={price?.step}
         />
-      </div>
+      </ScrollArea>
 
       <footer className="grid shrink-0 grid-cols-2 gap-3 border-t bg-background p-4 sm:px-6">
         <Button
