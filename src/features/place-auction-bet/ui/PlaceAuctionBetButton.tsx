@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/shared/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import type { AuctionDetail } from '@/entities/auction';
 
 import { usePlaceAuctionBet } from '../model/use-place-auction-bet';
@@ -32,18 +33,25 @@ export const PlaceAuctionBetButton = ({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetTrigger
-        className={buttonVariants()}
-        disabled={!canPlaceBet}
-        title={
-          canPlaceBet
-            ? undefined
-            : 'Для этого аукциона сейчас нельзя сделать ставку'
-        }
-      >
-        <Gavel data-icon="inline-start" aria-hidden="true" />
-        Сделать ставку
-      </SheetTrigger>
+      <Tooltip disabled={canPlaceBet}>
+        <TooltipTrigger
+          delay={200}
+          render={
+            <span
+              className="inline-flex"
+              tabIndex={canPlaceBet ? undefined : 0}
+            />
+          }
+        >
+          <SheetTrigger className={buttonVariants()} disabled={!canPlaceBet}>
+            <Gavel data-icon="inline-start" aria-hidden="true" />
+            Сделать ставку
+          </SheetTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          Ставки недоступны для текущего пользователя
+        </TooltipContent>
+      </Tooltip>
 
       <SheetContent initialFocus={priceInputRef}>
         <header className="flex shrink-0 items-center justify-between border-b px-5 py-4 sm:px-6">
