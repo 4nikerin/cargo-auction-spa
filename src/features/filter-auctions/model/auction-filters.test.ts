@@ -4,8 +4,8 @@ import { getAuctionFiltersKey } from './auction-filters';
 
 describe('ключ фильтров аукционов', () => {
   it('не зависит от порядка полей', () => {
-    expect(getAuctionFiltersKey({ cargo: 'AU-10', from: 'Москва' })).toBe(
-      getAuctionFiltersKey({ from: 'Москва', cargo: 'AU-10' }),
+    expect(getAuctionFiltersKey({ cargo: 'AU-10', from: 77 })).toBe(
+      getAuctionFiltersKey({ from: 77, cargo: 'AU-10' }),
     );
   });
 

@@ -3,6 +3,7 @@ import { auctionTypeOptions } from '@/entities/auction';
 import { auctionFilterStatusOptions } from '../model/auction-filters';
 import { useAuctionFilters } from '../model/use-auction-filters';
 import { ChoiceFilterChip } from './chips/ChoiceFilterChip';
+import { CityFilterChip } from './chips/CityFilterChip';
 import { TextFilterChip } from './chips/TextFilterChip';
 import { AuctionFiltersSheet } from './sheet/AuctionFiltersSheet';
 import type { AuctionFiltersValue } from '../model/auction-filters';
@@ -32,17 +33,15 @@ export const AuctionFiltersBar = ({
         placeholder="Например, AU-10482"
         onChange={(value) => setFilter('cargo', value)}
       />
-      <TextFilterChip
+      <CityFilterChip
         label="Откуда"
         value={filters.from}
-        placeholder="Город погрузки"
-        onChange={(value) => setFilter('from', value)}
+        onChange={(cityId) => setFilter('from', cityId)}
       />
-      <TextFilterChip
+      <CityFilterChip
         label="Куда"
         value={filters.to}
-        placeholder="Город выгрузки"
-        onChange={(value) => setFilter('to', value)}
+        onChange={(cityId) => setFilter('to', cityId)}
       />
       <ChoiceFilterChip
         label="Ваш статус"

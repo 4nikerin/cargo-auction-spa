@@ -32,9 +32,7 @@ describe('черновик всех фильтров', () => {
       cargo: 'AU-10482',
       mobileStatuses: [2],
       formType: 'НДС',
-      loadCityId: 77,
       loadRadius: 100,
-      unloadCityId: 16,
       unloadRadius: 50,
       customerIds: [340],
       auctionIds: [101],
@@ -47,6 +45,18 @@ describe('черновик всех фильтров', () => {
     expect(toAuctionFiltersValue(draft, value)).toMatchObject({
       ...value,
       cargo: 'AU-10483',
+    });
+  });
+
+  it('сохраняет выбранные города из справочника', () => {
+    const draft = createAllFiltersDraft({
+      from: 77,
+      to: 16,
+    });
+
+    expect(toAuctionFiltersValue(draft)).toMatchObject({
+      from: 77,
+      to: 16,
     });
   });
 });

@@ -68,8 +68,6 @@ const optionalTextArraySchema = z
 
 export const auctionFiltersSchema = z.object({
   cargo: optionalFilterTextSchema,
-  from: optionalFilterTextSchema,
-  to: optionalFilterTextSchema,
   status: z
     .array(z.enum(auctionTradingStatuses))
     .min(1)
@@ -85,9 +83,9 @@ export const auctionFiltersSchema = z.object({
   bodyTypes: optionalTextArraySchema,
   formType: optionalFilterTextSchema,
   international: optionalFilterBooleanSchema,
-  loadCityId: optionalFilterNumberSchema,
+  from: optionalFilterNumberSchema,
   loadRadius: optionalFilterNumberSchema,
-  unloadCityId: optionalFilterNumberSchema,
+  to: optionalFilterNumberSchema,
   unloadRadius: optionalFilterNumberSchema,
   loadDateFrom: optionalDateTimeSchema,
   loadDateTo: optionalDateTimeSchema,

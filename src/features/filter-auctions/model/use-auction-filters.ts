@@ -10,11 +10,9 @@ interface UseAuctionFiltersParams {
 
 export interface AuctionFiltersDraft extends Omit<
   AuctionFiltersValue,
-  'cargo' | 'from' | 'to' | 'status' | 'type'
+  'cargo' | 'status' | 'type'
 > {
   cargo: string;
-  from: string;
-  to: string;
   status: NonNullable<AuctionFiltersValue['status']>;
   type: NonNullable<AuctionFiltersValue['type']>;
 }
@@ -23,30 +21,17 @@ const createDraft = (value: AuctionFiltersValue): AuctionFiltersDraft => {
   return {
     ...value,
     cargo: value.cargo ?? '',
-    from: value.from ?? '',
-    to: value.to ?? '',
     status: value.status ?? [],
     type: value.type ?? [],
   };
 };
 
 const createValue = (draft: AuctionFiltersDraft): AuctionFiltersValue => {
-  const {
-    cargo: cargoDraft,
-    from: fromDraft,
-    to: toDraft,
-    status,
-    type,
-    ...rest
-  } = draft;
+  const { cargo: cargoDraft, status, type, ...rest } = draft;
   const value: AuctionFiltersValue = { ...rest };
   const cargo = cargoDraft.trim();
-  const from = fromDraft.trim();
-  const to = toDraft.trim();
 
   if (cargo) value.cargo = cargo;
-  if (from) value.from = from;
-  if (to) value.to = to;
   if (status.length > 0) value.status = status;
   if (type.length > 0) value.type = type;
 

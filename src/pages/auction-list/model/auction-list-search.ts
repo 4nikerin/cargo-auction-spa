@@ -88,8 +88,6 @@ export const toAuctionListRequest = (
   };
 
   if (search.cargo) request.cargo_num = search.cargo;
-  if (search.from) request.load_city = search.from;
-  if (search.to) request.unload_city = search.to;
   if (search.status) request.status = search.status;
   if (search.type) request.auc_type = search.type;
   if (search.mobileStatuses) request.mobile_statuses = search.mobileStatuses;
@@ -103,9 +101,9 @@ export const toAuctionListRequest = (
   if (search.international != null) {
     request.is_international_shipment = search.international;
   }
-  if (search.loadCityId != null) request.load_gc_id = search.loadCityId;
+  if (search.from != null) request.load_gc_id = search.from;
   if (search.loadRadius != null) request.load_range = search.loadRadius;
-  if (search.unloadCityId != null) request.unload_gc_id = search.unloadCityId;
+  if (search.to != null) request.unload_gc_id = search.to;
   if (search.unloadRadius != null) request.unload_range = search.unloadRadius;
   if (search.loadDateFrom)
     request.load_date_from = toApiDate(search.loadDateFrom);

@@ -2,8 +2,6 @@ import type { AuctionFiltersValue } from './auction-filters';
 
 export interface AllFiltersDraft {
   cargo: string;
-  from: string;
-  to: string;
   status: NonNullable<AuctionFiltersValue['status']>;
   type: NonNullable<AuctionFiltersValue['type']>;
   auctionStatuses: number[];
@@ -13,6 +11,7 @@ export interface AllFiltersDraft {
   volumeTo: string;
   bodyTypes: string;
   international: boolean;
+  from?: number;
   loadDateFrom: string;
   loadDateTo: string;
   unloadDateFrom: string;
@@ -32,6 +31,7 @@ export interface AllFiltersDraft {
   priceTo: string;
   pricePerKmFrom: string;
   pricePerKmTo: string;
+  to?: number;
 }
 
 export type SetAllFiltersDraftField = <Key extends keyof AllFiltersDraft>(
@@ -68,8 +68,6 @@ export const createAllFiltersDraft = (
 ): AllFiltersDraft => {
   return {
     cargo: value.cargo ?? '',
-    from: value.from ?? '',
-    to: value.to ?? '',
     status: value.status ?? [],
     type: value.type ?? [],
     auctionStatuses: value.auctionStatuses ?? [],
@@ -79,6 +77,7 @@ export const createAllFiltersDraft = (
     volumeTo: toInputValue(value.volumeTo),
     bodyTypes: value.bodyTypes?.join(', ') ?? '',
     international: value.international ?? false,
+    from: value.from,
     loadDateFrom: value.loadDateFrom ?? '',
     loadDateTo: value.loadDateTo ?? '',
     unloadDateFrom: value.unloadDateFrom ?? '',
@@ -98,6 +97,7 @@ export const createAllFiltersDraft = (
     priceTo: toInputValue(value.priceTo),
     pricePerKmFrom: toInputValue(value.pricePerKmFrom),
     pricePerKmTo: toInputValue(value.pricePerKmTo),
+    to: value.to,
   };
 };
 
@@ -110,8 +110,6 @@ export const toAuctionFiltersValue = (
     // Значения представленных ниже полей всегда перезаписываются из draft.
     ...baseValue,
     cargo: toText(draft.cargo),
-    from: toText(draft.from),
-    to: toText(draft.to),
     status: draft.status.length > 0 ? draft.status : undefined,
     type: draft.type.length > 0 ? draft.type : undefined,
     auctionStatuses:
@@ -122,6 +120,7 @@ export const toAuctionFiltersValue = (
     volumeTo: toNumber(draft.volumeTo),
     bodyTypes: toTextList(draft.bodyTypes),
     international: draft.international || undefined,
+    from: draft.from,
     loadDateFrom: toText(draft.loadDateFrom),
     loadDateTo: toText(draft.loadDateTo),
     unloadDateFrom: toText(draft.unloadDateFrom),
@@ -141,6 +140,7 @@ export const toAuctionFiltersValue = (
     priceTo: toNumber(draft.priceTo),
     pricePerKmFrom: toNumber(draft.pricePerKmFrom),
     pricePerKmTo: toNumber(draft.pricePerKmTo),
+    to: draft.to,
   };
 };
 
