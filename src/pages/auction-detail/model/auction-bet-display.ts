@@ -17,3 +17,23 @@ export const getAuctionBetPriceWithVat = (bet: AuctionBet) => {
 export const getAuctionBetPriceNoVat = (bet: AuctionBet) => {
   return bet.price_info?.price_no_vat ?? bet.price_no_vat;
 };
+
+export const getAuctionParticipantsCount = (bets: AuctionBet[]) => {
+  const participantIds = new Set<string>();
+
+  for (const bet of bets) {
+    if (bet.organization_inn) {
+      participantIds.add(`organization-inn:${bet.organization_inn}`);
+    } else if (bet.organization_id != null) {
+      participantIds.add(`organization:${bet.organization_id}`);
+    } else if (bet.subscriber_id != null) {
+      participantIds.add(`subscriber:${bet.subscriber_id}`);
+    } else if (bet.organization_name) {
+      participantIds.add(
+        `organization-name:${bet.organization_name.trim().toLocaleLowerCase('ru')}`,
+      );
+    }
+  }
+
+  return participantIds.size;
+};

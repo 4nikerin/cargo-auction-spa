@@ -7,6 +7,7 @@ import {
 import { getRussianPluralForm } from '@/shared/lib/plural';
 import { Switch } from '@/shared/ui/switch';
 
+import { getAuctionParticipantsCount } from '../model/auction-bet-display';
 import { getAuctionDetailVisibility } from '../model/auction-detail-visibility';
 import { AuctionBetsEmptyState } from './bets/AuctionBetsEmptyState';
 import { AuctionBetsError } from './bets/AuctionBetsError';
@@ -28,6 +29,17 @@ const formatBetsCount = (count: number) => {
       return `Найдено ${count} ставки`;
     default:
       return `Найдено ${count} ставок`;
+  }
+};
+
+const formatParticipantsCount = (count: number) => {
+  switch (getRussianPluralForm(count)) {
+    case 'one':
+      return `${count} участник`;
+    case 'few':
+      return `${count} участника`;
+    default:
+      return `${count} участников`;
   }
 };
 
@@ -65,13 +77,14 @@ export const AuctionBetsPage = ({
   }
 
   const bets = betsQuery.data.bets;
+  const participantsCount = getAuctionParticipantsCount(bets);
 
   return (
     <section aria-label="Список ставок">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           {bets.length
-            ? formatBetsCount(bets.length)
+            ? `${formatBetsCount(bets.length)} · ${formatParticipantsCount(participantsCount)}`
             : 'В этом аукционе ещё нет ставок'}
         </p>
 
