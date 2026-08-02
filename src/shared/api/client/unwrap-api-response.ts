@@ -15,14 +15,20 @@ interface ApiErrorResponse {
 
 type ApiResponse<Data> = ApiSuccessResponse<Data> | ApiErrorResponse;
 
+// Берём data только из успешной ветки: необязательное data ошибки не добавляет undefined.
+type ApiResponseData<Result> =
+  Result extends ApiSuccessResponse<infer Data> ? Data : never;
+
 /**
  * Адаптирует результат openapi-fetch для TanStack Query:
  * возвращает данные успешного ответа или выбрасывает ApiError.
  */
-export function unwrapApiResponse<Data>(result: ApiResponse<Data>): Data {
+export const unwrapApiResponse = <Result extends ApiResponse<unknown>>(
+  result: Result,
+): ApiResponseData<Result> => {
   if (result.error !== undefined) {
     throw new ApiError(result.response.status, result.error);
   }
 
-  return result.data;
-}
+  return result.data as ApiResponseData<Result>;
+};

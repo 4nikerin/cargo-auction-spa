@@ -1,3 +1,5 @@
-export function App() {
-  return <h1>Cargo Auction</h1>;
-}
+import { AppProviders } from './providers';
+
+export const App = () => {
+  return <AppProviders />;
+};

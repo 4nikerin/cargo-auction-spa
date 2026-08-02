@@ -2,6 +2,8 @@ import { apiClient, unwrapApiResponse } from '@/shared/api';
 import type { components } from '@/shared/api';
 
 export type AuctionListRequest = components['schemas']['AuctionListRequest'];
+export type AuctionListItem = components['schemas']['AuctionListItem'];
+export type AuctionListMeta = components['schemas']['AuctionListMeta'];
 
 export interface AuctionDetailParams {
   auctionUuid: string;
@@ -20,23 +22,23 @@ export interface SetBetParams {
 }
 
 /** Возвращает список аукционов с учётом фильтров и пагинации. */
-export async function getAuctions(
+export const getAuctions = async (
   params: AuctionListRequest = {},
   signal?: AbortSignal,
-) {
+) => {
   return unwrapApiResponse(
     await apiClient.POST('/auctions/list', {
       body: params,
       signal: signal ?? null,
     }),
   );
-}
+};
 
 /** Возвращает подробную информацию об аукционе. */
-export async function getAuction(
+export const getAuction = async (
   { auctionUuid }: AuctionDetailParams,
   signal?: AbortSignal,
-) {
+) => {
   return unwrapApiResponse(
     await apiClient.GET('/auctions/{auctionUuid}', {
       params: {
@@ -47,13 +49,13 @@ export async function getAuction(
       signal: signal ?? null,
     }),
   );
-}
+};
 
 /** Возвращает историю ставок аукциона. */
-export async function getAuctionBets(
+export const getAuctionBets = async (
   { auctionUuid, showAll = false }: AuctionBetsParams,
   signal?: AbortSignal,
-) {
+) => {
   return unwrapApiResponse(
     await apiClient.GET('/auctions/{auctionUuid}/bets', {
       params: {
@@ -67,14 +69,14 @@ export async function getAuctionBets(
       signal: signal ?? null,
     }),
   );
-}
+};
 
 /** Размещает ставку в аукционе. */
-export async function setBet(
+export const setBet = async (
   { auctionUuid, body }: SetBetParams,
   signal?: AbortSignal,
-) {
-  return unwrapApiResponse(
+) => {
+  unwrapApiResponse(
     await apiClient.POST('/auctions/{auctionUuid}/bets', {
       params: {
         path: {
@@ -85,4 +87,4 @@ export async function setBet(
       signal: signal ?? null,
     }),
   );
-}
+};

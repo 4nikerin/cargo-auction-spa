@@ -11,6 +11,7 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'public/mockServiceWorker.js',
+    'src/app/routeTree.gen.ts',
     'src/shared/api/generated/**/*',
   ]),
 
@@ -19,7 +20,7 @@ export default defineConfig([
 
     extends: [
       js.configs.recommended,
-      tseslint.configs.recommended,
+      ...tseslint.configs.strictTypeChecked,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       eslintPluginPrettierRecommended,
@@ -60,6 +61,25 @@ export default defineConfig([
 
     rules: {
       ...boundaries.configs.recommended.rules,
+
+      '@typescript-eslint/no-deprecated': 'error',
+
+      '@typescript-eslint/no-confusing-void-expression': [
+        'error',
+        { ignoreArrowShorthand: true },
+      ],
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        { allowNumber: true },
+      ],
+
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'FunctionDeclaration',
+          message: 'Use an arrow function assigned to const.',
+        },
+      ],
 
       'boundaries/dependencies': [
         'error',
@@ -207,6 +227,34 @@ export default defineConfig([
 
     languageOptions: {
       globals: globals.browser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+
+  {
+    files: ['src/app/routes/**/*.{ts,tsx}', 'src/shared/ui/**/*.{ts,tsx}'],
+    rules: {
+      // TanStack Router и shadcn экспортируют служебные значения рядом с UI.
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+
+  {
+    files: ['src/app/routes/**/*.{ts,tsx}'],
+    rules: {
+      // TanStack Router использует throw redirect(...) как управляющий переход.
+      '@typescript-eslint/only-throw-error': 'off',
+    },
+  },
+
+  {
+    files: ['**/*.{test,spec}.{ts,tsx}'],
+    rules: {
+      // Матчеры Vitest намеренно типизированы через any.
+      '@typescript-eslint/no-unsafe-assignment': 'off',
     },
   },
 ]);

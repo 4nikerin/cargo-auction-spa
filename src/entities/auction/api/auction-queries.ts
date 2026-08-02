@@ -20,25 +20,25 @@ export const auctionKeys = {
 };
 
 /** Настройки запроса списка аукционов. */
-export function auctionListQueryOptions(params: AuctionListRequest = {}) {
+export const auctionListQueryOptions = (params: AuctionListRequest = {}) => {
   return queryOptions({
     queryKey: auctionKeys.list(params),
     queryFn: ({ signal }) => getAuctions(params, signal),
   });
-}
+};
 
 /** Настройки запроса подробной информации об аукционе. */
-export function auctionDetailQueryOptions(params: AuctionDetailParams) {
+export const auctionDetailQueryOptions = (params: AuctionDetailParams) => {
   return queryOptions({
     queryKey: auctionKeys.detail(params),
     queryFn: ({ signal }) => getAuction(params, signal),
   });
-}
+};
 
 /** Настройки запроса истории ставок аукциона. */
-export function auctionBetsQueryOptions(params: AuctionBetsParams) {
+export const auctionBetsQueryOptions = (params: AuctionBetsParams) => {
   return queryOptions({
     queryKey: auctionKeys.bets(params),
     queryFn: ({ signal }) => getAuctionBets(params, signal),
   });
-}
+};

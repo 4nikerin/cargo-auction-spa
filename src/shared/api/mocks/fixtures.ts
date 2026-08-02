@@ -12,6 +12,8 @@ export const activeAuctionUuid = '10000000-0000-4000-8000-000000000101';
 export const losingAuctionUuid = '10000000-0000-4000-8000-000000000102';
 export const requestAuctionUuid = '10000000-0000-4000-8000-000000000103';
 export const fixedPriceAuctionUuid = '10000000-0000-4000-8000-000000000104';
+export const medicineAuctionUuid = '10000000-0000-4000-8000-000000000105';
+export const buildingAuctionUuid = '10000000-0000-4000-8000-000000000106';
 
 export const auctionListResponse = {
   data: [
@@ -26,22 +28,26 @@ export const auctionListResponse = {
         price_per_km: 188.01,
       },
       organizer: {
+        organization_id: 340,
         organization_name: 'ООО ФростЛайн',
         organization_inn: '7703769184',
       },
       route: {
         load: {
+          city_gc_id: 77,
           city: 'Москва',
           address: 'ул. Промышленная, 12',
           date: '2026-08-03T09:00:00+03:00',
         },
         unload: {
+          city_gc_id: 16,
           city: 'Казань',
           address: 'ул. Техническая, 8',
           date: '2026-08-04T16:00:00+03:00',
         },
       },
       cargo: {
+        is_international: false,
         name: 'Мороженое',
         weight: 18,
         volume: 72,
@@ -61,6 +67,7 @@ export const auctionListResponse = {
           current_no_vat: 154_166.67,
         },
       },
+      payment: { form: 'Безналичная с НДС', currency_code: '643' },
     },
     {
       main: {
@@ -73,22 +80,26 @@ export const auctionListResponse = {
         price_per_km: 127.19,
       },
       organizer: {
+        organization_id: 341,
         organization_name: 'АО УралМеталл',
         organization_inn: '6671002233',
       },
       route: {
         load: {
+          city_gc_id: 66,
           city: 'Екатеринбург',
           address: 'ул. Монтажников, 4',
           date: '2026-08-05T08:00:00+05:00',
         },
         unload: {
+          city_gc_id: 63,
           city: 'Самара',
           address: 'Заводское шоссе, 14',
           date: '2026-08-07T15:00:00+04:00',
         },
       },
       cargo: {
+        is_international: false,
         name: 'Металлопрокат',
         weight: 20,
         volume: 40,
@@ -107,6 +118,7 @@ export const auctionListResponse = {
           current_no_vat: 120_833.33,
         },
       },
+      payment: { form: 'Безналичная с НДС', currency_code: '643' },
     },
     {
       main: {
@@ -119,22 +131,26 @@ export const auctionListResponse = {
         price_per_km: 57.51,
       },
       organizer: {
+        organization_id: 342,
         organization_name: 'ООО ТехноСнаб',
         organization_inn: '5901004455',
       },
       route: {
         load: {
+          city_gc_id: 59,
           city: 'Пермь',
           address: 'ул. Героев Хасана, 105',
           date: '2026-08-06T10:00:00+05:00',
         },
         unload: {
+          city_gc_id: 77,
           city: 'Москва',
           address: 'Каширское шоссе, 23',
           date: '2026-08-08T18:00:00+03:00',
         },
       },
       cargo: {
+        is_international: false,
         name: 'Бытовая техника',
         weight: 12,
         volume: 60,
@@ -153,6 +169,7 @@ export const auctionListResponse = {
           current_no_vat: 81_666.67,
         },
       },
+      payment: { form: 'Безналичная с НДС', currency_code: '643' },
     },
     {
       main: {
@@ -165,22 +182,26 @@ export const auctionListResponse = {
         price_per_km: 105.56,
       },
       organizer: {
+        organization_id: 343,
         organization_name: 'ООО МебельПро',
         organization_inn: '7802006677',
       },
       route: {
         load: {
+          city_gc_id: 78,
           city: 'Санкт-Петербург',
           address: 'Мебельная ул., 5',
           date: '2026-08-07T09:00:00+03:00',
         },
         unload: {
+          city_gc_id: 53,
           city: 'Великий Новгород',
           address: 'Большая Московская ул., 20',
           date: '2026-08-07T18:00:00+03:00',
         },
       },
       cargo: {
+        is_international: false,
         name: 'Мебель',
         weight: 8,
         volume: 55,
@@ -199,15 +220,118 @@ export const auctionListResponse = {
           current_no_vat: 79_166.67,
         },
       },
+      payment: { form: 'Безналичная с НДС', currency_code: '643' },
+    },
+    {
+      main: {
+        id: 105,
+        cargo_num: 'AU-10486',
+        cargo_date: '2026-08-09T07:00:00+07:00',
+        auc_type: 'Down',
+        order_uid: medicineAuctionUuid,
+        created_at: '2026-07-31T09:00:00+07:00',
+        price_per_km: 146.67,
+      },
+      organizer: {
+        organization_id: 344,
+        organization_name: 'ООО ФармаЛогистик',
+        organization_inn: '5407007788',
+      },
+      route: {
+        load: {
+          city_gc_id: 54,
+          city: 'Новосибирск',
+          address: 'Станционная ул., 30',
+          date: '2026-08-09T07:00:00+07:00',
+        },
+        unload: {
+          city_gc_id: 55,
+          city: 'Омск',
+          address: 'ул. 10 лет Октября, 180',
+          date: '2026-08-10T15:00:00+06:00',
+        },
+      },
+      cargo: {
+        is_international: false,
+        name: 'Медикаменты',
+        weight: 10,
+        volume: 44,
+        body_type: 'рефрижератор',
+      },
+      trading: {
+        status: 'Auction',
+        status_mobile: 'NotParticipating',
+        start_time: '2026-08-01T09:00:00+07:00',
+        stop_time: '2026-08-04T17:00:00+07:00',
+        can_set_bet: true,
+        is_available: true,
+        is_bidder: false,
+        price: {
+          current: 132_000,
+          current_no_vat: 110_000,
+        },
+      },
+      payment: { form: 'Безналичная с НДС', currency_code: '643' },
+    },
+    {
+      main: {
+        id: 106,
+        cargo_num: 'AU-10487',
+        cargo_date: '2026-08-10T08:00:00+03:00',
+        auc_type: 'Up',
+        order_uid: buildingAuctionUuid,
+        created_at: '2026-07-31T12:30:00+03:00',
+        price_per_km: 84.62,
+      },
+      organizer: {
+        organization_id: 345,
+        organization_name: 'ООО ЮгСтрой',
+        organization_inn: '6165008899',
+      },
+      route: {
+        load: {
+          city_gc_id: 61,
+          city: 'Ростов-на-Дону',
+          address: 'ул. Доватора, 150',
+          date: '2026-08-10T08:00:00+03:00',
+        },
+        unload: {
+          city_gc_id: 23,
+          city: 'Краснодар',
+          address: 'Уральская ул., 98',
+          date: '2026-08-10T18:00:00+03:00',
+        },
+      },
+      cargo: {
+        is_international: false,
+        name: 'Строительные материалы',
+        weight: 19,
+        volume: 38,
+        body_type: 'тентованный',
+      },
+      trading: {
+        status: 'Auction',
+        status_mobile: 'Leading',
+        start_time: '2026-08-01T12:30:00+03:00',
+        stop_time: '2026-08-05T16:00:00+03:00',
+        can_set_bet: true,
+        is_available: true,
+        is_bidder: true,
+        price: {
+          current: 110_000,
+          current_no_vat: 91_666.67,
+        },
+      },
+      payment: { form: 'Безналичная с НДС', currency_code: '643' },
     },
   ],
   meta: {
     current_page: 1,
     from: 1,
-    last_page: 1,
-    per_page: 20,
-    to: 4,
-    total: 4,
+    last_page: 2,
+    per_page: 5,
+    to: 5,
+    total: 6,
   },
 } satisfies AuctionListResponse;
 
@@ -417,6 +541,92 @@ export const auctionDetails: Record<string, AuctionShowResponse> = {
     admitted_organizations: [],
     hide_bets_history: false,
   },
+  [medicineAuctionUuid]: {
+    main: {
+      id: 105,
+      cargo_num: 'AU-10486',
+      cargo_date: '2026-08-09T07:00:00+07:00',
+      order_uid: medicineAuctionUuid,
+      auc_type: 'Down',
+      created_at: '2026-07-31T09:00:00+07:00',
+    },
+    organizer: {
+      organization_name: 'ООО ФармаЛогистик',
+      organization_inn: '5407007788',
+      organization_id: 344,
+    },
+    contacts: [],
+    cargo: {
+      distance: 900,
+      truck_count: 1,
+      body_type: 'рефрижератор',
+      temp_from: 2,
+      temp_to: 8,
+    },
+    trading: {
+      status: 'Auction',
+      status_mobile: 'NotParticipating',
+      can_set_bet: true,
+      is_bidder: false,
+      price: {
+        start: 150_000,
+        current: 132_000,
+        current_no_vat: 110_000,
+        available: 129_000,
+        min: 100_000,
+        max: 150_000,
+        step: 3_000,
+      },
+      your: { bet: false, last_bet_with_vat: null },
+    },
+    payment: { form: 'Безналичная с НДС', currency_code: '643' },
+    assembly: {},
+    routes: [],
+    admitted_organizations: [],
+    hide_bets_history: false,
+  },
+  [buildingAuctionUuid]: {
+    main: {
+      id: 106,
+      cargo_num: 'AU-10487',
+      cargo_date: '2026-08-10T08:00:00+03:00',
+      order_uid: buildingAuctionUuid,
+      auc_type: 'Up',
+      created_at: '2026-07-31T12:30:00+03:00',
+    },
+    organizer: {
+      organization_name: 'ООО ЮгСтрой',
+      organization_inn: '6165008899',
+      organization_id: 345,
+    },
+    contacts: [],
+    cargo: {
+      distance: 260,
+      truck_count: 1,
+      body_type: 'тентованный',
+    },
+    trading: {
+      status: 'Auction',
+      status_mobile: 'Leading',
+      can_set_bet: true,
+      is_bidder: true,
+      price: {
+        start: 90_000,
+        current: 110_000,
+        current_no_vat: 91_666.67,
+        available: 115_000,
+        min: 90_000,
+        max: 160_000,
+        step: 5_000,
+      },
+      your: { bet: true, last_bet_with_vat: 110_000 },
+    },
+    payment: { form: 'Безналичная с НДС', currency_code: '643' },
+    assembly: {},
+    routes: [],
+    admitted_organizations: [],
+    hide_bets_history: false,
+  },
 };
 
 export const auctionBets: Record<string, BetItem[]> = {
@@ -462,4 +672,6 @@ export const auctionBets: Record<string, BetItem[]> = {
   [losingAuctionUuid]: [],
   [requestAuctionUuid]: [],
   [fixedPriceAuctionUuid]: [],
+  [medicineAuctionUuid]: [],
+  [buildingAuctionUuid]: [],
 };

@@ -1,3 +1,4 @@
 public/mockServiceWorker.js
 openapi/
+src/app/routeTree.gen.ts
 src/shared/api/generated/

@@ -32,16 +32,21 @@ afterAll(() => {
   mockServer.close();
 });
 
-describe('auction API with MSW', () => {
-  it('returns the auction list', async () => {
-    const response = await getAuctions();
+describe('API аукционов с MSW', () => {
+  it('возвращает список аукционов', async () => {
+    const response = await getAuctions({ page: 1, per_page: 5 });
 
-    expect(response.meta?.total).toBe(4);
-    expect(response.data).toHaveLength(4);
+    expect(response.meta).toMatchObject({
+      current_page: 1,
+      last_page: 2,
+      per_page: 5,
+      total: 6,
+    });
+    expect(response.data).toHaveLength(5);
     expect(response.data?.[0]?.main?.cargo_num).toBe('AU-10482');
   });
 
-  it('applies required filters and pagination', async () => {
+  it('применяет основные фильтры и пагинацию', async () => {
     const filtered = await getAuctions({
       page: 1,
       per_page: 1,
@@ -68,12 +73,56 @@ describe('auction API with MSW', () => {
       current_page: 2,
       from: 3,
       to: 4,
-      total: 4,
+      total: 6,
     });
     expect(secondPage.data).toHaveLength(2);
   });
 
-  it('returns a typed 404 problem', async () => {
+  it('применяет расширенные фильтры OpenAPI в мок-бэкенде', async () => {
+    const filtered = await getAuctions({
+      mobile_statuses: [2],
+      weight_from: 15,
+      weight_to: 19,
+      volume_from: 70,
+      volume_to: 75,
+      body_types: ['рефрижератор'],
+      form_type: 'НДС',
+      load_gc_id: 77,
+      unload_gc_id: 16,
+      unload_date_from: '2026-08-04T00:00:00+03:00',
+      unload_date_to: '2026-08-04T23:59:59+03:00',
+      create_date_from: '2026-07-29T00:00:00+03:00',
+      create_date_to: '2026-07-29T23:59:59+03:00',
+      start_time_from: '2026-07-31T00:00:00+03:00',
+      start_time_to: '2026-07-31T23:59:59+03:00',
+      stop_time_from: '2026-08-01T00:00:00+03:00',
+      stop_time_to: '2026-08-01T23:59:59+03:00',
+      is_favorite: true,
+      customer: 'Фрост',
+      customer_ids: [340],
+      contractor: 'ТрансЛог',
+      auction_ids: [101],
+      price_per_km_from: 180,
+      price_per_km_to: 190,
+    });
+
+    expect(filtered.meta?.total).toBe(1);
+    expect(filtered.data?.[0]?.main?.order_uid).toBe(activeAuctionUuid);
+  });
+
+  it('сортирует аукционы по полям из OpenAPI', async () => {
+    const [byCurrentPrice, byPricePerKm] = await Promise.all([
+      getAuctions({ sort: { current_price: 'asc' } }),
+      getAuctions({ sort: { price_per_km: 'desc' } }),
+    ]);
+
+    expect(byCurrentPrice.data?.[0]?.main?.order_uid).toBe(
+      fixedPriceAuctionUuid,
+    );
+    expect(byPricePerKm.data?.[0]?.main?.order_uid).toBe(activeAuctionUuid);
+  });
+
+  it('возвращает типизированную ошибку 404', async () => {
     const request = getAuction({
       auctionUuid: '00000000-0000-4000-8000-000000000000',
     });
@@ -86,7 +135,7 @@ describe('auction API with MSW', () => {
     });
   });
 
-  it('returns validation errors for an invalid bet', async () => {
+  it('возвращает ошибки валидации для некорректной ставки', async () => {
     const request = setBet({
       auctionUuid: activeAuctionUuid,
       body: { price: 0 },
@@ -106,7 +155,7 @@ describe('auction API with MSW', () => {
     });
   });
 
-  it('validates whether a bet is allowed and follows the price step', async () => {
+  it('проверяет возможность ставки и соблюдение шага цены', async () => {
     await expect(
       setBet({
         auctionUuid: fixedPriceAuctionUuid,
@@ -132,7 +181,7 @@ describe('auction API with MSW', () => {
     });
   });
 
-  it('returns an empty list when bet history is hidden', async () => {
+  it('возвращает пустой список, когда история ставок скрыта', async () => {
     const betList = await getAuctionBets({
       auctionUuid: requestAuctionUuid,
       showAll: true,
@@ -141,7 +190,7 @@ describe('auction API with MSW', () => {
     expect(betList.bets).toEqual([]);
   });
 
-  it('includes canceled bets only when showAll is enabled', async () => {
+  it('добавляет отменённые ставки только при включённом showAll', async () => {
     const [activeBets, allBets] = await Promise.all([
       getAuctionBets({ auctionUuid: activeAuctionUuid }),
       getAuctionBets({ auctionUuid: activeAuctionUuid, showAll: true }),
@@ -162,7 +211,7 @@ describe('auction API with MSW', () => {
 
   // Ставка должна изменить все связанные представления одних данных так же,
   // как это сделал бы настоящий бэкенд: список, карточку и историю ставок.
-  it('updates list, detail and bet history after a valid bet', async () => {
+  it('обновляет список, карточку и историю после корректной ставки', async () => {
     await setBet({
       auctionUuid: activeAuctionUuid,
       body: { price: 180_000 },

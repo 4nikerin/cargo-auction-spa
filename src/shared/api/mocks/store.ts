@@ -30,21 +30,38 @@ const auctionStatusByNumber = {
   8: 'Canceled',
 } as const;
 
+const mobileStatusByNumber = {
+  1: 'NotParticipating',
+  2: 'Leading',
+  3: 'Losing',
+  4: 'Winner',
+  5: 'Confirmed',
+} as const;
+
+const contractorByAuctionId: Record<number, string> = {
+  101: 'ООО ТрансЛог',
+  102: 'ООО СеверТранс',
+  103: 'ООО Магистраль',
+  104: 'ООО Вектор',
+  105: 'ООО СибирьТранс',
+  106: 'ООО ЮгКарго',
+};
+
 // Рабочие копии fixtures. Они изменяются запросами, имитируя состояние backend.
 let auctions: AuctionListItem[] = [];
 let details: Record<string, AuctionShowResponse> = {};
 let bets: Record<string, BetItem[]> = {};
 let nextBetId = 20_000;
 
-function includesText(value: string | undefined, search: string) {
+const includesText = (value: string | undefined, search: string) => {
   return value?.toLowerCase().includes(search.toLowerCase()) ?? false;
-}
+};
 
-function isWithinDates(
+const isWithinDates = (
   value: string | undefined,
   from: string | undefined,
   to: string | undefined,
-) {
+) => {
   if (!value) {
     return false;
   }
@@ -55,11 +72,11 @@ function isWithinDates(
     (from && timestamp < new Date(from).getTime()) ||
     (to && timestamp > new Date(to).getTime())
   );
-}
+};
 
 /** Проверяет один аукцион по всем фильтрам AuctionListRequest. */
-function matchesFilters(item: AuctionListItem, filters: AuctionListRequest) {
-  const { main, route, trading } = item;
+const matchesFilters = (item: AuctionListItem, filters: AuctionListRequest) => {
+  const { cargo, main, organizer, payment, route, trading } = item;
 
   if (filters.cargo_num && !includesText(main?.cargo_num, filters.cargo_num)) {
     return false;
@@ -82,6 +99,21 @@ function matchesFilters(item: AuctionListItem, filters: AuctionListRequest) {
       !trading?.status ||
       trading.status === 'Unknown' ||
       !statuses.includes(trading.status)
+    ) {
+      return false;
+    }
+  }
+
+  if (filters.mobile_statuses?.length) {
+    const statuses = filters.mobile_statuses.map(
+      (status) =>
+        mobileStatusByNumber[status as keyof typeof mobileStatusByNumber],
+    );
+
+    if (
+      !trading?.status_mobile ||
+      trading.status_mobile === 'Unknown' ||
+      !statuses.includes(trading.status_mobile)
     ) {
       return false;
     }
@@ -111,12 +143,112 @@ function matchesFilters(item: AuctionListItem, filters: AuctionListRequest) {
   }
 
   if (
+    filters.load_gc_id != null &&
+    route?.load?.city_gc_id !== filters.load_gc_id
+  ) {
+    return false;
+  }
+
+  if (
+    filters.unload_gc_id != null &&
+    route?.unload?.city_gc_id !== filters.unload_gc_id
+  ) {
+    return false;
+  }
+
+  if (
     (filters.load_date_from || filters.load_date_to) &&
     !isWithinDates(
       route?.load?.date,
       filters.load_date_from,
       filters.load_date_to,
     )
+  ) {
+    return false;
+  }
+
+  if (
+    (filters.unload_date_from || filters.unload_date_to) &&
+    !isWithinDates(
+      route?.unload?.date,
+      filters.unload_date_from,
+      filters.unload_date_to,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    (filters.create_date_from || filters.create_date_to) &&
+    !isWithinDates(
+      main?.created_at,
+      filters.create_date_from,
+      filters.create_date_to,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    (filters.start_time_from || filters.start_time_to) &&
+    !isWithinDates(
+      trading?.start_time,
+      filters.start_time_from,
+      filters.start_time_to,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    (filters.stop_time_from || filters.stop_time_to) &&
+    !isWithinDates(
+      trading?.stop_time,
+      filters.stop_time_from,
+      filters.stop_time_to,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    filters.weight_from != null &&
+    (cargo?.weight == null || cargo.weight < filters.weight_from)
+  ) {
+    return false;
+  }
+
+  if (
+    filters.weight_to != null &&
+    (cargo?.weight == null || cargo.weight > filters.weight_to)
+  ) {
+    return false;
+  }
+
+  if (
+    filters.volume_from != null &&
+    (cargo?.volume == null || cargo.volume < filters.volume_from)
+  ) {
+    return false;
+  }
+
+  if (
+    filters.volume_to != null &&
+    (cargo?.volume == null || cargo.volume > filters.volume_to)
+  ) {
+    return false;
+  }
+
+  if (
+    filters.body_types?.length &&
+    (!cargo?.body_type || !filters.body_types.includes(cargo.body_type))
+  ) {
+    return false;
+  }
+
+  if (
+    filters.is_international_shipment !== undefined &&
+    cargo?.is_international !== filters.is_international_shipment
   ) {
     return false;
   }
@@ -135,6 +267,48 @@ function matchesFilters(item: AuctionListItem, filters: AuctionListRequest) {
     return false;
   }
 
+  if (
+    filters.is_favorite !== undefined &&
+    trading?.is_favorite !== filters.is_favorite
+  ) {
+    return false;
+  }
+
+  if (
+    filters.customer &&
+    !includesText(organizer?.organization_name, filters.customer) &&
+    !includesText(organizer?.organization_inn, filters.customer)
+  ) {
+    return false;
+  }
+
+  if (
+    filters.customer_ids?.length &&
+    (organizer?.organization_id == null ||
+      !filters.customer_ids.includes(organizer.organization_id))
+  ) {
+    return false;
+  }
+
+  if (
+    filters.auction_ids?.length &&
+    (main?.id == null || !filters.auction_ids.includes(main.id))
+  ) {
+    return false;
+  }
+
+  if (filters.form_type && !includesText(payment?.form, filters.form_type)) {
+    return false;
+  }
+
+  if (
+    filters.contractor &&
+    (main?.id == null ||
+      !includesText(contractorByAuctionId[main.id], filters.contractor))
+  ) {
+    return false;
+  }
+
   const currentPrice = trading?.price?.current;
 
   if (
@@ -144,24 +318,106 @@ function matchesFilters(item: AuctionListItem, filters: AuctionListRequest) {
     return false;
   }
 
+  const pricePerKm = main?.price_per_km;
+
+  if (
+    filters.price_per_km_from != null &&
+    (pricePerKm == null || pricePerKm < filters.price_per_km_from)
+  ) {
+    return false;
+  }
+
+  if (
+    filters.price_per_km_to != null &&
+    (pricePerKm == null || pricePerKm > filters.price_per_km_to)
+  ) {
+    return false;
+  }
+
   return !(
     filters.current_price_to != null &&
     (currentPrice === undefined || currentPrice > filters.current_price_to)
   );
-}
+};
 
-function withoutVat(price: number) {
+const getAuctionSortValue = (item: AuctionListItem, field: string) => {
+  switch (field) {
+    case 'start_time':
+      return item.trading?.start_time
+        ? new Date(item.trading.start_time).getTime()
+        : undefined;
+    case 'current_price':
+      return item.trading?.price?.current;
+    case 'price_per_km':
+      return item.main?.price_per_km ?? undefined;
+    default:
+      return undefined;
+  }
+};
+
+const compareSortValues = (
+  left: number | undefined,
+  right: number | undefined,
+  direction: 'asc' | 'desc',
+) => {
+  if (left === right) return 0;
+  if (left === undefined) return 1;
+  if (right === undefined) return -1;
+
+  const result = left - right;
+  return direction === 'asc' ? result : -result;
+};
+
+/** Применяет документированные OpenAPI-поля сортировки к моковому ответу. */
+const sortAuctions = (
+  items: AuctionListItem[],
+  filters: AuctionListRequest,
+) => {
+  const sortEntries = Object.entries(filters.sort ?? {});
+
+  if (sortEntries.length > 0) {
+    return items.sort((left, right) => {
+      for (const [field, direction] of sortEntries) {
+        const result = compareSortValues(
+          getAuctionSortValue(left, field),
+          getAuctionSortValue(right, field),
+          direction,
+        );
+
+        if (result !== 0) return result;
+      }
+
+      return 0;
+    });
+  }
+
+  if (filters.is_oldest !== undefined) {
+    const direction = filters.is_oldest ? 'asc' : 'desc';
+
+    return items.sort((left, right) =>
+      compareSortValues(
+        getAuctionSortValue(left, 'start_time'),
+        getAuctionSortValue(right, 'start_time'),
+        direction,
+      ),
+    );
+  }
+
+  return items;
+};
+
+const withoutVat = (price: number) => {
   return Number((price / 1.2).toFixed(2));
-}
+};
 
 /**
  * Эмулирует серверную валидацию ставки: доступность торгов, диапазон цены,
  * шаг и направление аукциона.
  */
-function getBetValidationErrors(
+const getBetValidationErrors = (
   auction: AuctionShowResponse,
   request: SetBetRequest,
-) {
+) => {
   const errors: ValidationError[] = [];
   const { price } = request;
   const tradingPrice = auction.trading.price;
@@ -235,10 +491,10 @@ function getBetValidationErrors(
   }
 
   return errors;
-}
+};
 
 /** Рассчитывает следующую доступную цену с учётом типа аукциона и шага. */
-function getAvailablePrice(auction: AuctionShowResponse, price: number) {
+const getAvailablePrice = (auction: AuctionShowResponse, price: number) => {
   const { max, min, step } = auction.trading.price ?? {};
 
   if (!step) {
@@ -254,24 +510,25 @@ function getAvailablePrice(auction: AuctionShowResponse, price: number) {
   }
 
   return price;
-}
+};
 
 /** Восстанавливает независимое начальное состояние перед каждым тестом. */
-export function resetMockStore() {
-  auctions = structuredClone(initialListResponse.data ?? []);
+export const resetMockStore = () => {
+  auctions = structuredClone(initialListResponse.data);
   details = structuredClone(initialDetails);
   bets = structuredClone(initialBets);
   nextBetId = 20_000;
-}
+};
 
 /** Применяет фильтры и собирает метаданные страницы как настоящий list endpoint. */
-export function listMockAuctions(
+export const listMockAuctions = (
   filters: AuctionListRequest = {},
-): AuctionListResponse {
+): AuctionListResponse => {
   const page = filters.page ?? 1;
   const perPage = filters.per_page ?? 20;
-  const filtered = auctions.filter((auction) =>
-    matchesFilters(auction, filters),
+  const filtered = sortAuctions(
+    auctions.filter((auction) => matchesFilters(auction, filters)),
+    filters,
   );
   const start = (page - 1) * perPage;
   const data = filtered.slice(start, start + perPage);
@@ -287,18 +544,18 @@ export function listMockAuctions(
       total: filtered.length,
     },
   };
-}
+};
 
 /** Возвращает детальные данные аукциона из памяти. */
-export function getMockAuction(auctionUuid: string) {
+export const getMockAuction = (auctionUuid: string) => {
   return details[auctionUuid];
-}
+};
 
 /**
  * Возвращает доступную историю ставок. По умолчанию отменённые ставки скрыты,
  * а флаг скрытия истории у аукциона имеет приоритет над `showAll`.
  */
-export function getMockBets(auctionUuid: string, showAll = false) {
+export const getMockBets = (auctionUuid: string, showAll = false) => {
   const auction = details[auctionUuid];
 
   if (auction?.hide_bets_history || auction?.trading.hide_bets_history) {
@@ -310,13 +567,13 @@ export function getMockBets(auctionUuid: string, showAll = false) {
   return {
     bets: showAll ? auctionBets : auctionBets.filter((bet) => !bet.is_rejected),
   };
-}
+};
 
 /**
  * Валидирует и сохраняет новую ставку, затем синхронизирует все представления
  * аукциона, которые клиент может запросить отдельными эндпоинтами.
  */
-export function setMockBet(auctionUuid: string, request: SetBetRequest) {
+export const setMockBet = (auctionUuid: string, request: SetBetRequest) => {
   const auction = details[auctionUuid];
 
   if (!auction) {
@@ -404,6 +661,6 @@ export function setMockBet(auctionUuid: string, request: SetBetRequest) {
   }
 
   return { status: 'success' as const };
-}
+};
 
 resetMockStore();
