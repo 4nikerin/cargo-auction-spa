@@ -1,19 +1,19 @@
-import { Gavel } from 'lucide-react';
-
 import {
   AuctionTradingStatusBadge,
   getAuctionTypeLabel,
 } from '@/entities/auction';
+import { PlaceAuctionBetButton } from '@/features/place-auction-bet';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
 import { StickySurface } from '@/shared/ui/sticky-surface';
 import type { AuctionDetail } from '@/entities/auction';
 
 interface AuctionDetailStickyHeaderProps {
+  auctionUuid: string;
   detail: AuctionDetail;
 }
 
 export const AuctionDetailStickyHeader = ({
+  auctionUuid,
   detail,
 }: AuctionDetailStickyHeaderProps) => {
   return (
@@ -36,14 +36,10 @@ export const AuctionDetailStickyHeader = ({
           </p>
         </div>
 
-        <Button
-          type="button"
-          disabled
-          title="Форма ставки будет реализована следующим этапом"
-        >
-          <Gavel data-icon="inline-start" aria-hidden="true" />
-          Сделать ставку
-        </Button>
+        <PlaceAuctionBetButton
+          auctionUuid={auctionUuid}
+          trading={detail.trading}
+        />
       </div>
     </StickySurface>
   );

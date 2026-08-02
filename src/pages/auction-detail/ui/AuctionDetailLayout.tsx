@@ -24,7 +24,7 @@ export const AuctionDetailLayout = ({
 
   return (
     <main className="w-full pb-8 lg:pb-10">
-      <AuctionDetailStickyHeader detail={detail} />
+      <AuctionDetailStickyHeader auctionUuid={auctionUuid} detail={detail} />
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav

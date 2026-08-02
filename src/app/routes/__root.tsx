@@ -3,6 +3,7 @@ import type { QueryClient } from '@tanstack/react-query';
 
 import { NotFoundPage } from '@/pages/not-found';
 import { ScrollToTopButton } from '@/shared/ui/scroll-to-top-button';
+import { Toaster } from '@/shared/ui/sonner';
 import { AppBreadcrumbs } from '@/widgets/app-breadcrumbs';
 import { AppHeader } from '@/widgets/app-header';
 
@@ -17,6 +18,7 @@ const RootLayout = () => {
       <AppBreadcrumbs />
       <Outlet />
       <ScrollToTopButton />
+      <Toaster richColors position="bottom-right" />
     </div>
   );
 };
