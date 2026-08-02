@@ -28,7 +28,7 @@ export const AuctionDetailLayout = ({
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav
-          className="my-5 flex w-fit rounded-xl bg-muted p-1"
+          className="mx-auto my-5 flex w-fit rounded-xl bg-muted p-1"
           aria-label="Разделы аукциона"
         >
           <Link

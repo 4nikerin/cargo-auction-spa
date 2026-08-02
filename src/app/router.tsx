@@ -9,6 +9,9 @@ export const router = createRouter({
   defaultPreload: 'intent',
   // Свежесть серверных данных определяет TanStack Query, а не отдельный кэш роутера.
   defaultPreloadStaleTime: 0,
+  // Показываем skeleton сразу и не даём ему мигнуть при быстрых ответах.
+  defaultPendingMs: 0,
+  defaultPendingMinMs: 300,
   scrollRestoration: true,
 });
 

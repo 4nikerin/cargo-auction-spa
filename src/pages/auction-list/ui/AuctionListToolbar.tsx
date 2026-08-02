@@ -1,3 +1,4 @@
+import { getRussianPluralForm } from '@/shared/lib/plural';
 import { Skeleton } from '@/shared/ui/skeleton';
 
 import { AuctionPageSizeSelect } from './AuctionPageSizeSelect';
@@ -17,10 +18,9 @@ interface AuctionListToolbarProps {
 }
 
 const totalFormatter = new Intl.NumberFormat('ru-RU');
-const auctionPluralRules = new Intl.PluralRules('ru-RU');
 
 const getAuctionCountLabel = (total: number) => {
-  switch (auctionPluralRules.select(total)) {
+  switch (getRussianPluralForm(total)) {
     case 'one':
       return 'аукцион';
     case 'few':

@@ -24,6 +24,7 @@ export {
 } from './api/auction-api';
 
 export type {
+  AuctionBet,
   AuctionBetsParams,
   AuctionDetail,
   AuctionDetailParams,

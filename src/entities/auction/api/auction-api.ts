@@ -5,6 +5,7 @@ export type AuctionListRequest = components['schemas']['AuctionListRequest'];
 export type AuctionListItem = components['schemas']['AuctionListItem'];
 export type AuctionListMeta = components['schemas']['AuctionListMeta'];
 export type AuctionDetail = components['schemas']['AuctionShowResponse'];
+export type AuctionBet = components['schemas']['BetItem'];
 
 export interface AuctionDetailParams {
   auctionUuid: string;
