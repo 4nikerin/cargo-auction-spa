@@ -9,6 +9,7 @@ export {
   auctionTypeOptions,
   getAuctionTypeLabel,
 } from './model/auction-type-labels';
+export { getAuctionStatusLabel } from './model/auction-status-labels';
 export {
   auctionTradingStatusOptions,
   getTradingStatusLabel,
@@ -24,6 +25,7 @@ export {
 
 export type {
   AuctionBetsParams,
+  AuctionDetail,
   AuctionDetailParams,
   AuctionListItem,
   AuctionListMeta,

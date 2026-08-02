@@ -1,15 +1,39 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { auctionDetailQueryOptions } from '@/entities/auction';
+
+import { AuctionAdmittedOrganizationsSection } from './sections/AuctionAdmittedOrganizationsSection';
+import { AuctionCargoSection } from './sections/AuctionCargoSection';
+import { AuctionOrganizerSection } from './sections/AuctionOrganizerSection';
+import { AuctionOverviewSection } from './sections/AuctionOverviewSection';
+import { AuctionPaymentSection } from './sections/AuctionPaymentSection';
+import { AuctionRouteSection } from './sections/AuctionRouteSection';
+import { AuctionTradingSection } from './sections/AuctionTradingSection';
+
 interface AuctionDetailPageProps {
-  auctionNumber: string;
+  auctionUuid: string;
 }
 
-export const AuctionDetailPage = ({
-  auctionNumber,
-}: AuctionDetailPageProps) => {
+export const AuctionDetailPage = ({ auctionUuid }: AuctionDetailPageProps) => {
+  const { data: detail } = useSuspenseQuery(
+    auctionDetailQueryOptions({ auctionUuid }),
+  );
+
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 pt-4 pb-8 sm:px-6 lg:px-8 lg:pt-4 lg:pb-10">
-      <h1 className="text-3xl font-semibold tracking-tight">
-        Аукцион №{auctionNumber}
-      </h1>
-    </main>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <AuctionOverviewSection detail={detail} />
+      <AuctionOrganizerSection detail={detail} />
+      <div className="lg:col-span-2">
+        <AuctionRouteSection detail={detail} />
+      </div>
+      <div className="lg:col-span-2">
+        <AuctionCargoSection detail={detail} />
+      </div>
+      <AuctionPaymentSection detail={detail} />
+      <AuctionAdmittedOrganizationsSection detail={detail} />
+      <div className="lg:col-span-2">
+        <AuctionTradingSection detail={detail} />
+      </div>
+    </div>
   );
 };
