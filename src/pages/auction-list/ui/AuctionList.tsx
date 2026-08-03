@@ -1,12 +1,10 @@
 import { Link } from '@tanstack/react-router';
 
-import { AuctionCard, hasAuctionOwnBet } from '@/entities/auction';
-import { PlaceAuctionBetListButton } from '@/features/place-auction-bet';
-import { ViewAuctionBetsButton } from '@/features/view-auction-bets';
+import { AuctionCard } from '@/entities/auction';
 import { SearchPagination } from '@/shared/router/search-pagination';
-import { Button } from '@/shared/ui/button';
 import type { AuctionListItem } from '@/entities/auction';
 
+import { AuctionCardAction } from './AuctionCardAction';
 import type { AuctionListPagination } from '../model/auction-list-search';
 
 interface AuctionListProps {
@@ -28,38 +26,11 @@ export const AuctionList = ({
           // OpenAPI не делает UUID обязательным, поэтому сохраняем fallback для неполных данных.
           const auctionKey = auctionUuid ?? auction.main?.id ?? index;
 
-          const hasOwnBet = hasAuctionOwnBet(auction.trading);
-          const canPlaceBet = auction.trading?.can_set_bet === true;
-
-          const action = !auctionUuid ? (
-            <Button size="sm" disabled>
-              Ставки недоступны
-            </Button>
-          ) : hasOwnBet ? (
-            canPlaceBet ? (
-              <PlaceAuctionBetListButton
-                auctionUuid={auctionUuid}
-                label="Изменить ставку"
-              />
-            ) : (
-              <ViewAuctionBetsButton auctionUuid={auctionUuid} />
-            )
-          ) : canPlaceBet ? (
-            <PlaceAuctionBetListButton
-              auctionUuid={auctionUuid}
-              label="Сделать ставку"
-            />
-          ) : (
-            <Button size="sm" disabled>
-              Ставки недоступны
-            </Button>
-          );
-
           return (
             <AuctionCard
               key={auctionKey}
               auction={auction}
-              action={action}
+              action={<AuctionCardAction auction={auction} />}
               detailsLink={
                 auctionUuid ? (
                   <Link

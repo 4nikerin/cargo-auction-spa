@@ -11,10 +11,16 @@ import type { AuctionFiltersValue } from './auction-filters';
 interface UseAllFiltersParams {
   value: AuctionFiltersValue;
   onApply: (value: AuctionFiltersValue) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const useAllFilters = ({ value, onApply }: UseAllFiltersParams) => {
-  const [open, setOpen] = useState(false);
+export const useAllFilters = ({
+  value,
+  onApply,
+  open,
+  onOpenChange,
+}: UseAllFiltersParams) => {
   const [draft, setDraft] = useState(() => createAllFiltersDraft(value));
 
   const setField: SetAllFiltersDraftField = (key, fieldValue) => {
@@ -23,12 +29,12 @@ export const useAllFilters = ({ value, onApply }: UseAllFiltersParams) => {
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) setDraft(createAllFiltersDraft(value));
-    setOpen(nextOpen);
+    onOpenChange(nextOpen);
   };
 
   const applyFilters = () => {
     onApply(toAuctionFiltersValue(draft, value));
-    setOpen(false);
+    onOpenChange(false);
   };
 
   const resetFilters = () => {
@@ -36,7 +42,7 @@ export const useAllFilters = ({ value, onApply }: UseAllFiltersParams) => {
 
     setDraft(createAllFiltersDraft(emptyValue));
     onApply(emptyValue);
-    setOpen(false);
+    onOpenChange(false);
   };
 
   return {

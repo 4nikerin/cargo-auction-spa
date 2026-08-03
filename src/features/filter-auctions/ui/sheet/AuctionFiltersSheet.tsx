@@ -1,4 +1,5 @@
 import { SlidersHorizontal, X } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 
 import { Button } from '@/shared/ui/button';
 import { ScrollArea } from '@/shared/ui/scroll-area';
@@ -10,6 +11,7 @@ import {
   SheetTrigger,
 } from '@/shared/ui/sheet';
 
+import { auctionFiltersUiStore } from '../../model/auction-filters-ui-store';
 import { useAllFilters } from '../../model/use-all-filters';
 import { filterChipStyles } from '../chips/filter-chip-styles';
 import { BasicFiltersSection } from './BasicFiltersSection';
@@ -23,10 +25,10 @@ interface AuctionFiltersSheetProps {
   onApply: (value: AuctionFiltersValue) => void;
 }
 
-export const AuctionFiltersSheet = ({
+export const AuctionFiltersSheet = observer(function AuctionFiltersSheet({
   value,
   onApply,
-}: AuctionFiltersSheetProps) => {
+}: AuctionFiltersSheetProps) {
   const {
     activeFiltersCount,
     applyFilters,
@@ -35,7 +37,12 @@ export const AuctionFiltersSheet = ({
     open,
     resetFilters,
     setField,
-  } = useAllFilters({ value, onApply });
+  } = useAllFilters({
+    value,
+    onApply,
+    open: auctionFiltersUiStore.allFiltersOpen,
+    onOpenChange: (open) => auctionFiltersUiStore.setAllFiltersOpen(open),
+  });
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
@@ -105,4 +112,4 @@ export const AuctionFiltersSheet = ({
       </SheetContent>
     </Sheet>
   );
-};
+});

@@ -1,16 +1,17 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 import { useSetBetMutation } from './use-set-bet-mutation';
 
 interface UsePlaceAuctionBetParams {
   auctionUuid: string;
+  onOpenChange: (open: boolean) => void;
 }
 
 export const usePlaceAuctionBet = ({
   auctionUuid,
+  onOpenChange,
 }: UsePlaceAuctionBetParams) => {
-  const [open, setOpen] = useState(false);
   const { isPending, mutateAsync, reset } = useSetBetMutation(auctionUuid);
 
   const handleOpenChange = useCallback(
@@ -19,13 +20,13 @@ export const usePlaceAuctionBet = ({
         return;
       }
 
-      setOpen(isOpen);
+      onOpenChange(isOpen);
 
       if (isOpen) {
         reset();
       }
     },
-    [isPending, reset],
+    [isPending, onOpenChange, reset],
   );
 
   const submit = useCallback(
@@ -35,19 +36,18 @@ export const usePlaceAuctionBet = ({
         body: { price },
       });
 
-      setOpen(false);
+      onOpenChange(false);
 
       toast.success('Ставка принята', {
         description: 'Данные аукциона и список ставок обновлены.',
       });
     },
-    [auctionUuid, mutateAsync],
+    [auctionUuid, mutateAsync, onOpenChange],
   );
 
   return {
     handleOpenChange,
     isPending,
-    open,
     submit,
   };
 };
