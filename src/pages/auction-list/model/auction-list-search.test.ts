@@ -1,9 +1,40 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  auctionListSearchSchema,
   getAuctionListPagination,
   toAuctionListRequest,
 } from './auction-list-search';
+
+describe('auctionListSearchSchema', () => {
+  it('разбирает допустимые параметры URL', () => {
+    expect(
+      auctionListSearchSchema.parse({
+        page: 3,
+        perPage: '20',
+        sort: 'price-desc',
+      }),
+    ).toMatchObject({
+      page: 3,
+      perPage: 20,
+      sort: 'price-desc',
+    });
+  });
+
+  it('использует безопасные fallback для некорректных параметров', () => {
+    expect(
+      auctionListSearchSchema.parse({
+        page: 1,
+        perPage: 13,
+        sort: 'unknown',
+      }),
+    ).toMatchObject({
+      page: undefined,
+      perPage: undefined,
+      sort: undefined,
+    });
+  });
+});
 
 describe('пагинация списка аукционов', () => {
   it('использует запрошенную страницу, если API не вернул meta', () => {
