@@ -10,15 +10,15 @@ import type { AuctionDetail } from '@/entities/auction';
 interface AuctionDetailStickyHeaderProps {
   auctionUuid: string;
   detail: AuctionDetail;
-  placeBetOpen: boolean;
-  onPlaceBetOpenChange: (open: boolean) => void;
+  placeBetOpenFromUrl: boolean;
+  onPlaceBetUrlClose: () => void;
 }
 
 export const AuctionDetailStickyHeader = ({
   auctionUuid,
   detail,
-  placeBetOpen,
-  onPlaceBetOpenChange,
+  placeBetOpenFromUrl,
+  onPlaceBetUrlClose,
 }: AuctionDetailStickyHeaderProps) => {
   return (
     <StickySurface>
@@ -43,8 +43,8 @@ export const AuctionDetailStickyHeader = ({
         <PlaceAuctionBetButton
           auctionUuid={auctionUuid}
           trading={detail.trading}
-          open={placeBetOpen}
-          onOpenChange={onPlaceBetOpenChange}
+          openFromUrl={placeBetOpenFromUrl}
+          onUrlClose={onPlaceBetUrlClose}
         />
       </div>
     </StickySurface>

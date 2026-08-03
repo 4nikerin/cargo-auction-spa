@@ -1,5 +1,4 @@
-import { Outlet, createFileRoute, useRouter } from '@tanstack/react-router';
-import { useRef } from 'react';
+import { Outlet, createFileRoute } from '@tanstack/react-router';
 
 import { auctionDetailQueryOptions } from '@/entities/auction';
 import {
@@ -28,34 +27,22 @@ const AuctionDetailRoute = () => {
   const { auctionUuid } = Route.useParams();
   const { action } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const router = useRouter();
-  const openedFromDetailRef = useRef(false);
 
-  const handlePlaceBetOpenChange = (open: boolean) => {
-    if (!open && openedFromDetailRef.current) {
-      openedFromDetailRef.current = false;
-      router.history.back();
-      return;
-    }
-
-    if (open) {
-      openedFromDetailRef.current = true;
-    }
-
+  const handlePlaceBetUrlClose = () => {
     void navigate({
       search: (current) => ({
         ...current,
-        action: open ? 'place-bet' : undefined,
+        action: undefined,
       }),
-      replace: !open,
+      replace: true,
     });
   };
 
   return (
     <AuctionDetailLayout
       auctionUuid={auctionUuid}
-      placeBetOpen={action === 'place-bet'}
-      onPlaceBetOpenChange={handlePlaceBetOpenChange}
+      placeBetOpenFromUrl={action === 'place-bet'}
+      onPlaceBetUrlClose={handlePlaceBetUrlClose}
     >
       <Outlet />
     </AuctionDetailLayout>

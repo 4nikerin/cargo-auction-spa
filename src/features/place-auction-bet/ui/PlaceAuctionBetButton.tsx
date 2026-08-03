@@ -12,29 +12,30 @@ import { PlaceAuctionBetSheet } from './PlaceAuctionBetSheet';
 interface PlaceAuctionBetButtonProps {
   auctionUuid: string;
   trading: AuctionDetail['trading'];
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  openFromUrl: boolean;
+  onUrlClose: () => void;
 }
 
 export const PlaceAuctionBetButton = ({
   auctionUuid,
   trading,
-  open,
-  onOpenChange,
+  openFromUrl,
+  onUrlClose,
 }: PlaceAuctionBetButtonProps) => {
   const priceInputRef = useRef<HTMLInputElement>(null);
   const canPlaceBet = trading.can_set_bet === true;
   const hasOwnBet = trading.your?.bet ?? trading.is_bidder ?? false;
-  const { handleOpenChange, isPending, submit } = usePlaceAuctionBet({
+  const { handleOpenChange, isPending, open, submit } = usePlaceAuctionBet({
     auctionUuid,
-    onOpenChange,
+    openFromUrl,
+    onUrlClose,
   });
 
   useEffect(() => {
-    if (open && !canPlaceBet) {
-      onOpenChange(false);
+    if (openFromUrl && !canPlaceBet) {
+      onUrlClose();
     }
-  }, [canPlaceBet, onOpenChange, open]);
+  }, [canPlaceBet, onUrlClose, openFromUrl]);
 
   return (
     <PlaceAuctionBetSheet

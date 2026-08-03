@@ -9,6 +9,7 @@ import {
 import {
   activeAuctionUuid,
   fixedPriceAuctionUuid,
+  losingAuctionUuid,
   requestAuctionUuid,
 } from '@/shared/api/mocks/fixtures';
 import { mockServer } from '@/shared/api/mocks/server';
@@ -207,6 +208,15 @@ describe('API аукционов с MSW', () => {
         }),
       ]),
     );
+  });
+
+  it('возвращает историю для аукциона с перебитой ставкой пользователя', async () => {
+    const betList = await getAuctionBets({ auctionUuid: losingAuctionUuid });
+
+    expect(betList.bets).toHaveLength(2);
+    expect(betList.bets.map((bet) => bet.price_with_vat)).toEqual([
+      145_000, 140_000,
+    ]);
   });
 
   // Ставка должна изменить все связанные представления одних данных так же,

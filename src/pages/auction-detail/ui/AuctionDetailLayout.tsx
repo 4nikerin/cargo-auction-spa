@@ -9,8 +9,8 @@ import { AuctionDetailStickyHeader } from './AuctionDetailStickyHeader';
 interface AuctionDetailLayoutProps {
   auctionUuid: string;
   children: ReactNode;
-  placeBetOpen: boolean;
-  onPlaceBetOpenChange: (open: boolean) => void;
+  placeBetOpenFromUrl: boolean;
+  onPlaceBetUrlClose: () => void;
 }
 
 const tabClassName =
@@ -19,8 +19,8 @@ const tabClassName =
 export const AuctionDetailLayout = ({
   auctionUuid,
   children,
-  placeBetOpen,
-  onPlaceBetOpenChange,
+  placeBetOpenFromUrl,
+  onPlaceBetUrlClose,
 }: AuctionDetailLayoutProps) => {
   const { data: detail } = useSuspenseQuery(
     auctionDetailQueryOptions({ auctionUuid }),
@@ -31,8 +31,8 @@ export const AuctionDetailLayout = ({
       <AuctionDetailStickyHeader
         auctionUuid={auctionUuid}
         detail={detail}
-        placeBetOpen={placeBetOpen}
-        onPlaceBetOpenChange={onPlaceBetOpenChange}
+        placeBetOpenFromUrl={placeBetOpenFromUrl}
+        onPlaceBetUrlClose={onPlaceBetUrlClose}
       />
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">

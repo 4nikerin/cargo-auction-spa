@@ -1,17 +1,20 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 import { useSetBetMutation } from './use-set-bet-mutation';
 
 interface UsePlaceAuctionBetParams {
   auctionUuid: string;
-  onOpenChange: (open: boolean) => void;
+  openFromUrl: boolean;
+  onUrlClose: () => void;
 }
 
 export const usePlaceAuctionBet = ({
   auctionUuid,
-  onOpenChange,
+  openFromUrl,
+  onUrlClose,
 }: UsePlaceAuctionBetParams) => {
+  const [locallyOpen, setLocallyOpen] = useState(false);
   const { isPending, mutateAsync, reset } = useSetBetMutation(auctionUuid);
 
   const handleOpenChange = useCallback(
@@ -20,13 +23,17 @@ export const usePlaceAuctionBet = ({
         return;
       }
 
-      onOpenChange(isOpen);
+      setLocallyOpen(isOpen);
+
+      if (!isOpen && openFromUrl) {
+        onUrlClose();
+      }
 
       if (isOpen) {
         reset();
       }
     },
-    [isPending, onOpenChange, reset],
+    [isPending, onUrlClose, openFromUrl, reset],
   );
 
   const submit = useCallback(
@@ -36,18 +43,23 @@ export const usePlaceAuctionBet = ({
         body: { price },
       });
 
-      onOpenChange(false);
+      setLocallyOpen(false);
+
+      if (openFromUrl) {
+        onUrlClose();
+      }
 
       toast.success('Ставка принята', {
         description: 'Данные аукциона и список ставок обновлены.',
       });
     },
-    [auctionUuid, mutateAsync, onOpenChange],
+    [auctionUuid, mutateAsync, onUrlClose, openFromUrl],
   );
 
   return {
     handleOpenChange,
     isPending,
+    open: locallyOpen || openFromUrl,
     submit,
   };
 };
