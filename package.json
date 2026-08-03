@@ -66,8 +66,7 @@
   },
   "packageManager": "pnpm@10.13.1",
   "engines": {
-    "node": "^20.19.0 || ^22.13.0 || >=24.0.0",
-    "pnpm": ">=10"
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
   },
   "msw": {
     "workerDirectory": [
